@@ -58,7 +58,7 @@ public:
 		return &self->data;
 	}
 	void Dup() {
-		push(*Peek());
+		Push(*Peek());
 	}
 	void Swap() {
 		STACK<Item>* a = self, * b = self->next;
@@ -74,7 +74,7 @@ public:
 	void Flip() {
 		Stack<Item> n;
 		while (!IsEmpty())
-			n.push(Pop());
+			n.Push(Pop());
 		*this = n;
 	}
 	bool IsEmpty() {

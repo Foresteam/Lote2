@@ -13,5 +13,6 @@ public:
 		refs = Refs();
 	}
 	Object* GetObject(string name);
+	string GetName(Object* pobject);
 	bool Assign(string name, Object* value);
 };

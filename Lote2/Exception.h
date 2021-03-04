@@ -23,3 +23,7 @@ class NullReference : Exception {
 protected:
 	string msg = "null reference";
 };
+class AlreadyDefined : Exception {
+protected:
+	string msg = "already defined in the scope";
+};

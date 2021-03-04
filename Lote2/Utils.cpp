@@ -38,3 +38,45 @@ string Str::join(list<string> what, string with) {
 		result += *it + (it == what.rbegin().base() ? "" : " ");
 	return result;
 }
+
+string Str::fromPtr(void* p) {
+	string r;
+	stringstream ss;
+	ss << p;
+	ss >> r;
+	return "0x" + r;
+}
+
+void* Str::toPtr(string s) {
+	s.erase(0, 2);
+	unsigned int t = 0;
+
+	auto it = s.end();
+	int i = 0;
+	do {
+		it--;
+		for (int j = 0; j < 16; j++)
+			if (*it == hexAlph[j]) {
+				t += j * pow(16, i);
+				break;
+			}
+		i++;
+	} while (it != s.begin());
+
+	return reinterpret_cast<void*>(t);
+}
+
+bool Str::isNumeric(string what) {
+	const string numchars = "0123456789.";
+	for (char c : what)
+		if (numchars.find(c) == string::npos)
+			return false;
+	return true;
+}
+
+bool Str::isHexNumeric(string what) {
+	for (char c : what)
+		if (hexAlph.find(c) == string::npos)
+			return false;
+	return true;
+}

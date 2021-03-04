@@ -1,7 +1,7 @@
 #pragma once
 #include "Function.h"
 #include "Runtime.h"
-typedef void*(*lfunction)(Scope*);
+typedef void (*lfunction)(Scope*);
 
 
 class CFunction : public Function {
@@ -10,7 +10,6 @@ private:
 public:
 	CFunction(string name, lfunction eval) : Function(name, 0, 0) {
 		this->eval = eval;
-		this->destroy = false;
 	}
 
 

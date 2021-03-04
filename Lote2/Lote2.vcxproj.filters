@@ -25,9 +25,6 @@
     <Filter Include="Core\Object">
       <UniqueIdentifier>{112469c8-dfb5-4c15-95e7-1ead79d4fbe7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Function">
-      <UniqueIdentifier>{124681ba-b5cf-402a-923f-ccadb5813ce1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Exceptions">
       <UniqueIdentifier>{986cea0c-f922-4b35-aa4d-73eea9899d27}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,12 @@
     </Filter>
     <Filter Include="Core\Scope">
       <UniqueIdentifier>{a4b2fb7c-fc3a-4c7c-862b-38ead6c33741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Object\Pointer">
+      <UniqueIdentifier>{4819db2e-e009-407e-9933-0587e924b645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Object\Function">
+      <UniqueIdentifier>{124681ba-b5cf-402a-923f-ccadb5813ce1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,13 +64,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Function.cpp">
-      <Filter>Core\Function</Filter>
+      <Filter>Core\Object\Function</Filter>
     </ClCompile>
     <ClCompile Include="CFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Module.cpp">
       <Filter>Core\Scope</Filter>
+    </ClCompile>
+    <ClCompile Include="Pointer.cpp">
+      <Filter>Core\Object\Pointer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,13 +99,16 @@
       <Filter>Core\Operator</Filter>
     </ClInclude>
     <ClInclude Include="Function.h">
-      <Filter>Core\Function</Filter>
+      <Filter>Core\Object\Function</Filter>
     </ClInclude>
     <ClInclude Include="CFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Module.h">
       <Filter>Core\Scope</Filter>
+    </ClInclude>
+    <ClInclude Include="Pointer.h">
+      <Filter>Core\Object\Pointer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
