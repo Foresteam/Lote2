@@ -12,20 +12,7 @@ private:
 	vector<string> code;
 	string name;
 public:
-	Module(string name, string fileName) {
-		this->name = name;
-		ifstream file(fileName.c_str());
-		string tcontent;
-		string line;
-		while (file.is_open() && !file.eof()) {
-			getline(file, line);
-			tcontent += line + ' ';
-		}
-		file.close();
-		Str::replaceAll(tcontent, "\n", " ");
-		Str::replaceAll(tcontent, "\t", "");
-		code = Str::split(tcontent, " ");
-	}
+	Module(string name, string fileName);
 	void Exec(size_t from, size_t to);
 	void Exec(size_t from);
 	void Export(string moduleName, Module another);

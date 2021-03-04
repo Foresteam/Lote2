@@ -56,7 +56,7 @@ void CFunction::Init() {
 	});
 }
 
-void* CFunction::Eval(bool toStack) {
+void* CFunction::Eval() {
 	eval(origin);
 	return nullptr;
 }

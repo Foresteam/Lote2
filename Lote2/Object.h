@@ -23,11 +23,12 @@ public:
 	Object() : Object("null", nullptr, "null") {}
 	~Object();
 
-	virtual void* Eval(bool toStack = true);
-	string SEval(bool toStack = true);
+	virtual void* Eval();
+	string SEval();
 	string GetType();
-	void* GetModigy();
-	virtual void* GetReAssign();
+	void SetType(string type);
+	bool SetValue(void* value, string type = "auto");
+	virtual bool GetReAssign();
 
 	bool IsNumber();
 

@@ -15,5 +15,6 @@ namespace Runtime {
 	//string FindObjectReference(Object* pobject);
 	bool ObjectHasReference(Object* pobject);
 
-	void DObject(Object* pobject);
+	void DObject(Object* pobject, bool anyway = false);
+	void Unlink(string name, bool global);
 }

@@ -17,5 +17,5 @@ public:
 	}
 	static void Register(string name, Function* function);
 	static void Register(string name, size_t start, size_t end);
-	void* Eval(bool toStack = true) override;
+	void* Eval() override;
 };

@@ -13,7 +13,7 @@ public:
 	}
 
 
-	void* Eval(bool toStack) override;
+	void* Eval() override;
 
 	static void Register(string name, lfunction eval);
 	static void Init();

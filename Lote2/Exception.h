@@ -2,28 +2,25 @@
 #include <string>
 using namespace std;
 
-class Exception {
-protected:
-	string msg;
+class Exception : exception {
 public:
-	Exception() {
-		throw exception(("Exception: " + msg).c_str());
-	}
+	Exception(string msg, string mname = "", string line = "") : exception(("Exception: " + msg + ". Module: " + mname + ", line: " + line).c_str()) {}
 };
 
 class ConstReAssign : Exception {
-protected:
-	string msg = "tried to re-assign a constant value";
+public:
+	ConstReAssign() : Exception("tried to re-assign a constant value") { throw *this; }
 };
 class EmptyStack : Exception {
-protected:
-	string msg = "tried to re-assign a constant value";
+public:
+	EmptyStack() : Exception("the stack was empty") { throw *this; }
 };
 class NullReference : Exception {
-protected:
-	string msg = "null reference";
+public:
+	NullReference() : Exception("null reference") { throw *this; }
 };
 class AlreadyDefined : Exception {
-protected:
+public:
+	AlreadyDefined() : Exception("already defined in the scope") { throw *this; }
 	string msg = "already defined in the scope";
 };

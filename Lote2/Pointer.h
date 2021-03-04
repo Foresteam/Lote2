@@ -5,7 +5,7 @@ class Pointer : public Object {
 public:
 	Pointer(Object* value) {
 		this->value = value;
-		type = "p_" + value->GetType();
+		type = "*" + value->GetType();
 		svalue = Str::fromPtr(value);
 	}
 };

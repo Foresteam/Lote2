@@ -24,16 +24,16 @@ void Object::ValueFromString() {
 void Object::StringFromValue() {
 	if (type == "bool")
 		svalue = *reinterpret_cast<bool*>(value) ? "true" : "false";
-	else {
+	else if (IsNumber()) {
 		stringstream ss;
 		if (type == "float")
 			ss << *reinterpret_cast<long double*>(value);
 		else if (type == "int")
 			ss << *reinterpret_cast<long int*>(value);
-		else if (type == "string")
-			ss << *reinterpret_cast<string*>(value);
 		ss >> svalue;
 	}
+	else if (type == "string")
+		svalue = *reinterpret_cast<string*>(value);
 }
 
 void Object::FindType() {
@@ -58,7 +58,7 @@ Object::Object(string svalue, void* value, string type, bool constant) {
 	this->svalue = svalue;
 	this->type = type;
 	this->value = value;
-	krefs = 0;
+	krefs = 1;
 
 	if (type == "auto")
 		FindType();
@@ -75,25 +75,34 @@ Object::~Object() {
 			delete (string*)value;
 }
 
-void* Object::Eval(bool toStack) {
+void* Object::Eval() {
+	if (Str::startsWith(type, "*"))
+		return Str::toPtr(SEval());
 	return nullptr;
 }
-string Object::SEval(bool toStack) {
+string Object::SEval() {
 	return svalue;
 }
 
 string Object::GetType() {
 	return type;
 }
-
-void* Object::GetModigy() {
-	return value;
+void Object::SetType(string type) {
+	this->type = type;
+	if (type == "auto")
+		FindType();
 }
 
-void* Object::GetReAssign() {
+bool Object::SetValue(void* value, string type) {
+	this->value = value;
+	SetType(type);
+	return true;
+}
+
+bool Object::GetReAssign() {
    /* if (constant)
 		throw ConstReAssign();*/
-	return constant ? value : nullptr;
+	return !constant;
 }
 
 bool Object::IsNumber() {
@@ -130,43 +139,14 @@ Object* Object::operator+(Object& other) {
 		}
 	}
 	else {
+		string s1 = SEval(), s2 = other.SEval();
+		t = new string(SEval() + other.SEval());
 		if (value)
 			delete reinterpret_cast<string*>(value); // mmm, unsafe
-		t = new string(SEval() + other.SEval());
-		StringFromValue();
 	}
 	value = t;
+	auto tt = (string*)value;
 	StringFromValue();
 
 	return this;
-}
-Object* Object::operator-(Object& other) {
-	Object* result;
-	if (IsNumber() && other.IsNumber()) {
-		if (type == "int" && other.type == "int")
-			result = new Object("", new long int(*reinterpret_cast<long int*>(value) - *reinterpret_cast<long int*>(other.value)), "int");
-		else
-			result = new Object("", new long double((long double)*reinterpret_cast<long int*>(value) - (long double)*reinterpret_cast<long int*>(other.value)), "float");
-	}
-	else if (svalue.size() >= other.svalue.size())
-		result = new Object(svalue.substr(0, svalue.size() - other.svalue.size()));
-	else
-		result = new Object("", nullptr, "string");
-	return result;
-}
-Object* Object::operator*(Object& other) {
-	Object* result;
-	if (IsNumber() && other.IsNumber()) {
-		if (type == "int" && other.type == "int")
-			result = new Object("", new long int(*reinterpret_cast<long int*>(value) * *reinterpret_cast<long int*>(other.value)), "int");
-		else
-			result = new Object("", new long double((long double)*reinterpret_cast<long int*>(value) * (long double)*reinterpret_cast<long int*>(other.value)), "float");
-	}
-	else {
-		string nvalue = "";
-		for (size_t i = 0; i < (other.type == "int" ? *reinterpret_cast<long int*>(other.value) : other.svalue.size()); i++)
-			nvalue += svalue;
-		result = new Object(nvalue, nullptr, "string");
-	}
-	return result;
 }

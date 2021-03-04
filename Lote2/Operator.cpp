@@ -10,13 +10,6 @@ void Operators::Init() {
 		static list<string> builded;
 		string word = *it;
 
-		list<string::iterator> indexes = list<string::iterator>();
-		for (auto it = word.rbegin(); it.base() != word.begin(); it++)
-			if (*it == 'n' && *(it + 1) == '\\' && ((it + 2) == word.rend() || *(it + 2) != '\\'))
-				indexes.push_back(it.base());
-		for (auto it : indexes)
-			word.replace(it, it + 1, "\n");
-
 		if (building) {
 			if (Str::endsWith(word, "'") && !Str::endsWith(word, "\\'")) {
 				word.erase(word.size() - 1);
@@ -44,6 +37,9 @@ void Operators::Init() {
 				sv->erase(sv->begin());*/
 			if (Str::endsWith(*sv, " "))
 				sv->erase(sv->end() - 1);
+			size_t pos;
+			while ((pos = sv->find("\\n")) != string::npos)
+				sv->replace(pos, 2, "\n");
 			mainStack.Push(new Object(*sv, sv, "string"));
 			builded.clear();
 			return true;
@@ -53,7 +49,8 @@ void Operators::Init() {
 	});
 	// vars
 	operators.push_back([](vsi& it) {
-		if (*it == "define") {
+		string word = *it;
+		if (word == "define") {
 			bool global = false;
 			Scope* to = scopes.back();
 			string name;
@@ -80,14 +77,82 @@ void Operators::Init() {
 
 			return true;
 		}
-		else if (*it == "var") {
-			string name;
-			{
-				auto t = mainStack.Pop();
-				name = t->SEval();
-				Runtime::DObject(t);
+		else if (Str::endsWith(word, "&") || word == "var") {
+			string vname = word;
+			if (Str::endsWith(vname, "&"))
+				vname = vname.substr(0, vname.size() - 1);
+			else {
+				Object* ovname = mainStack.Pop();
+				vname = ovname->SEval();
+				Runtime::DObject(ovname);
 			}
-			mainStack.Push(new Pointer(Runtime::FindObjectByName(name)));
+			mainStack.Push(new Pointer(Runtime::FindObjectByName(vname)));
+			return true;
+		}
+		else if (word == "assign" || word == "=") {
+			Object* pnvalue = mainStack.Pop();
+			Object* pvar = mainStack.Pop();
+			/*if (Object* np = reinterpret_cast<Object*>(pnvalue->Eval()))
+				pnvalue = np;*/
+			*reinterpret_cast<Object*>(pvar->Eval()) = *pnvalue;
+			Runtime::DObject(pvar);
+			Runtime::DObject(pnvalue);
+			return true;
+		}
+		else if (word == "unlink") {
+			bool global;
+			Object* pvarname;
+			pvarname = mainStack.Pop();
+			if (pvarname->SEval() == "global") {
+				global = true;
+				Runtime::DObject(pvarname);
+				pvarname = mainStack.Pop();
+			}
+			else
+				global = false;
+			Runtime::Unlink(pvarname->SEval(), global);
+			Runtime::DObject(pvarname);
+			return true;
+		}
+		else if (word == "delete") {
+			Object* pobj = mainStack.Pop();
+			Runtime::DObject(pobj, true);
+			return true;
+		}
+		return false;
+	});
+	// eval & call
+	operators.push_back([](vsi& it) {
+		string word = *it;
+		Object* po = nullptr;
+		if (Str::endsWith(word, "()") || word == "call") {
+			word = word != "call" ? word.erase(word.size() - 2, 2) : "";
+			string fn;
+			if (word.size() > 0)
+				fn = word;
+			else {
+				Object* o = mainStack.Pop();
+				fn = o->SEval();
+				Runtime::DObject(o);
+			}
+			po = Runtime::FindObjectByName(fn);
+			if (!po)
+				return true;
+		}
+		else if (word == "eval") {
+			Object* ptr = mainStack.Pop();
+			po = reinterpret_cast<Object*>(ptr->Eval());
+			if (!po)
+				return true;
+			Runtime::DObject(ptr);
+		}
+		if (po) {
+			if (Str::startsWith(po->GetType(), "Function."))
+				po->Eval();
+			else {
+				po->AddRef();
+				mainStack.Push(po);
+			}
 			return true;
 		}
 		return false;
@@ -120,24 +185,6 @@ void Operators::Init() {
 		mainStack.Push(a);
 
 		return true;
-	});
-	// function calling
-	operators.push_back([](vsi& it) {
-		string word = *it;
-		if (Str::endsWith(word, "()") || word == "eval") {
-			word = word.erase(word.size() - 2, 2);
-			string fn;
-			if (word.size() > 0)
-				fn = word;
-			else {
-				Object* o = mainStack.Pop();
-				fn = o->SEval();
-				Runtime::DObject(o);
-			}
-			Runtime::FindObjectByName(fn)->Eval();
-			return true;
-		}
-		return false;
 	});
 	// default
 	operators.push_back([](vsi& it) {

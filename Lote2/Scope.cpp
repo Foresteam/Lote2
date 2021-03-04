@@ -21,3 +21,15 @@ bool Scope::Assign(string name, Object* value) {
 		return false;
 	return true;
 }
+
+void Scope::Repoint(Object* o, Object* n) {
+	for (auto& pair : refs)
+		if (pair.second == o) {
+			pair.second = n;
+			n->AddRef();
+		}
+}
+
+bool Scope::Unlink(string name) {
+	return refs.erase(name) > 0;
+}
