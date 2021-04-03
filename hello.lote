@@ -1,8 +1,15 @@
 -- this string is so sexy
-ебать ' ' мой ' ' хуй + + + + print()
+-- ебать ' ' мой ' ' хуй + + + + print()
 -- gives error cuz undefined
-fuck var print()
-fuck define 999 =
-fuck var false assign
-fuck() print call
-fuck& print ()
+-- fuck var print()
+-- fuck define 999 =
+-- fuck var false assign
+-- fuck() print call
+-- fuck& eval typeof() print()
+-- fuck define sDupRef() 'node D:/UWD/Desktop/kek.js' shellRun() assign
+-- eval print call
+-- output is 2 2
+-- 1 sDupRef() 1 + ' ' printAll()
+-- output is 1 2
+-- 1 sDup() 1 + ' ' printAll()
+'What's f'd up and everything's alright'' 'print' ()
