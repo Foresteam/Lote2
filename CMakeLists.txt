@@ -33,4 +33,7 @@ add_executable(Lote2
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(Lote2 PRIVATE Threads::Threads)
 include(CPack)
